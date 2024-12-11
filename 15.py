@@ -60,3 +60,5 @@ board = list(range(1, EMPTY_SQUARE + 1))
 shuffle(board)
 draw_board()
 root.mainloop()
+
+
