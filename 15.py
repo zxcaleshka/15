@@ -94,3 +94,41 @@ board = list(range(1, EMPTY_SQUARE + 1))
 shuffle(board)
 draw_board()
 root.mainloop()
+from tkinter import Canvas, Tk
+from random import shuffle
+
+# Размеры поля
+BOARD_SIZE = 3
+SQUARE_SIZE = 80
+EMPTY_SQUARE = BOARD_SIZE ** 2
+
+# Создаем окно
+root = Tk()
+root.title("Пятнашки")
+
+c = Canvas(root, width=BOARD_SIZE * SQUARE_SIZE,
+           height=BOARD_SIZE * SQUARE_SIZE, bg='#808080')
+c.pack()
+
+
+def draw_board():
+    c.delete('all')
+    for i in range(BOARD_SIZE):
+        for j in range(BOARD_SIZE):
+            index = str(
+                board[BOARD_SIZE * i + j])  # Значение в клетке
+            if index != str(
+                    EMPTY_SQUARE):  # Если клетка не пустая
+                c.create_rectangle(j * SQUARE_SIZE, i * SQUARE_SIZE,
+                                   # Здесь рисуем квадрат
+                                   j * SQUARE_SIZE + SQUARE_SIZE,
+                                   i * SQUARE_SIZE + SQUARE_SIZE,
+                                   fill='#FFFFFF',
+                                   outline='#000000')
+                c.create_text(j * SQUARE_SIZE + SQUARE_SIZE / 2,
+                              # Пишем число
+                              i * SQUARE_SIZE + SQUARE_SIZE / 2,
+                              text=index,
+                              font="Arial {} italic".format(int(SQUARE_SIZE / 4)),
+                              fill='#000000')
+
