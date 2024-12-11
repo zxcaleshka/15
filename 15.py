@@ -131,4 +131,3 @@ def draw_board():
                               text=index,
                               font="Arial {} italic".format(int(SQUARE_SIZE / 4)),
                               fill='#000000')
-
