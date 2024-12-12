@@ -42,7 +42,6 @@ def get_empty_neighbor(index): # Узнать индекс пустой клет
             return empty_index
     return index # Рядом нет пустого поля
 
-
 def click(event):
     x, y = event.x, event.y # Координаты точки куда нажал пользователь
     x = x // SQUARE_SIZE
@@ -51,13 +50,55 @@ def click(event):
     empty_index = get_empty_neighbor(board_index)
     board[board_index], board[empty_index] = board[empty_index], board[board_index] # Меняем местами пустую и куда нажали
     draw_board() # Все стираем и рисуем с новыми данными
+    if board == correct_board:
+        show_victory_plate()
+
+def is_solvable(): # Функция проверяющая есть ли решение
+    num_inversions = get_inv_count()
+
+    if BOARD_SIZE % 2 != 0:                   # У нечетной доски четное количество инверсий
+        return num_inversions % 2 == 0
+    else:
+        empty_square_row = BOARD_SIZE - (board.index(EMPTY_SQUARE) // BOARD_SIZE)
+        # В нечетном ряду четное, в четном ряду нечетное
+        if empty_square_row % 2 == 0:
+            return num_inversions % 2 != 0
+        else:
+            return num_inversions % 2 == 0
+
+#Подсчитывает количество инверсий.пар клеток, где число в первой больше числа во второй, но находится раньше.
+def get_inv_count():
+    inversions = 0
+    inversion_board = board[:]
+    inversion_board.remove(EMPTY_SQUARE)
+    for i in range(len(inversion_board)):
+        first_item = inversion_board[i]
+        for j in range(i + 1, len(inversion_board)):
+            second_item = inversion_board[j]
+            if first_item > second_item:
+                inversions += 1
+    return inversions
+
+def show_victory_plate():
+    c.create_rectangle(SQUARE_SIZE / 5,
+                       SQUARE_SIZE * BOARD_SIZE / 2 - 10 * BOARD_SIZE,
+                       BOARD_SIZE * SQUARE_SIZE - SQUARE_SIZE / 5,
+                       SQUARE_SIZE * BOARD_SIZE / 2 + 10 * BOARD_SIZE,
+                       fill='#FFFFFF',
+                       outline='#FFFFFF')
+    c.create_text(SQUARE_SIZE * BOARD_SIZE / 2, SQUARE_SIZE * BOARD_SIZE / 1.9,
+                  text="WIN", font="Arial {} bold".format(int(10 * BOARD_SIZE)), fill='#008000')
 
 c.bind('<Button-1>', click)
 c.pack()
 
 # Создаем поле
 board = list(range(1, EMPTY_SQUARE + 1))
+correct_board = board[:]
 shuffle(board)
+
+while not is_solvable():
+    shuffle(board)
+    
 draw_board()
 root.mainloop()
-<<<<<<< HEAD
